@@ -1,0 +1,19 @@
+---
+- hosts: "{{ env }}"
+  become: yes
+  tasks: 
+    - name: Building Docker Image & Deploying Application Container...
+      shell: | 
+         if [ `docker ps | grep certapp | awk '{print $1}' | wc -l` -gt 0 ]; then  
+            echo "Deleting previous running container"
+            docker rm -f `docker ps | grep certapp | awk '{print $1}'`
+            echo "Deleting previous image"
+            docker image rm certapp
+            echo "Building new image and creating containter"
+            docker build --file Dockerfile --tag certapp:v1 /var/lib/jenkins/workspace/job_install_app
+            docker run -d -p 9090:80 certapp:v1
+         else 
+            echo "Building new image and creating containter"
+            docker build --file Dockerfile --tag certapp:v1 /var/lib/jenkins/workspace/job_install_app
+            docker run -d -p 9090:80 certapp:v1
+         fi
