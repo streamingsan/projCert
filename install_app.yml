@@ -1,4 +1,4 @@
-- hosts: "{{ env }}"
+- hosts: all
   become: yes
   tasks: 
     - name: Deploying Application Container...
