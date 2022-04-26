@@ -10,10 +10,10 @@
             echo "Deleting previous image"
             docker image rm certapp
             echo "Building new image and creating containter"
-            docker build --file Dockerfile --tag certapp:v1 /var/lib/jenkins/workspace/job_install_app
+            docker build --file Dockerfile --tag certapp:v1 .
             docker run -d -p 9090:80 certapp:v1
          else 
             echo "Building new image and creating containter"
-            docker build --file Dockerfile --tag certapp:v1 /var/lib/jenkins/workspace/job_install_app
+            docker build --file Dockerfile --tag certapp:v1 .
             docker run -d -p 9090:80 certapp:v1
          fi
