@@ -2,18 +2,16 @@
 - hosts: "{{ env }}"
   become: yes
   tasks: 
-    - name: Building Docker Image & Deploying Application Container...
+    - name: Deploying Application Container...
       shell: | 
          if [ `docker ps | grep certapp | awk '{print $1}' | wc -l` -gt 0 ]; then  
             echo "Deleting previous running container"
             docker rm -f `docker ps | grep certapp | awk '{print $1}'`
             echo "Deleting previous image"
-            docker image rm certapp
-            echo "Building new image and creating containter"
-            docker build --file Dockerfile --tag certapp:v1 .
-            docker run -d -p 9090:80 certapp:v1
+            docker image rm `docker image ls | grep 'streamingsan/certapp' | awk '{print $1":"$2}'`
+            echo "Pulling latest image and creating containter"
+            docker run -d -p 9090:80 streamingsan/certapp:{{ build }}
          else 
             echo "Building new image and creating containter"
-            docker build --file Dockerfile --tag certapp:v1 .
-            docker run -d -p 9090:80 certapp:v1
+            docker run -d -p 9090:80 streamingsan/certapp:{{ build }}
          fi
