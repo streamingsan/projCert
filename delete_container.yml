@@ -1,0 +1,12 @@
+---
+- hosts: "{{ env }}"
+  become: yes
+  tasks: 
+    - name: Deploying Application Container...
+      shell: | 
+         if [ `docker ps | grep certapp | awk '{print $1}' | wc -l` -gt 0 ]; then  
+            echo "Deleting previous running container"
+            docker rm -f `docker ps | grep certapp | awk '{print $1}'`
+            echo "Deleting previous image"
+            docker image rm `docker image ls | grep 'streamingsan/certapp' | awk '{print $1":"$2}'`
+         fi
